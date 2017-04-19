@@ -1,0 +1,28 @@
+#服务的相关配置
+server:
+  port: 8080
+  context-path: /wjs
+
+
+#mybatis的相关配置
+mybatis:
+  type-aliases-package: com.example.entity
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+
+
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wjs?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: root
+
+
+#自定义的属性
+student:
+  name: 老王
+  age: 18
+
+

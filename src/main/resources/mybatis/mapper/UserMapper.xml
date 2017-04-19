@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.UserMapper">
+
+
+    <!--常用的动态sql标签：if标签、where标签、sql片段、foreach标签-->
+
+
+    <!--根据id 查找-->
+    <select id="findUserById" parameterType="Integer"
+            resultType="User">
+        SELECT *from user WHERE id=#{id}
+    </select>
+
+    <!--获取user表中所有的记录-->
+    <select id="findUserAll" resultType="User">
+        SELECT *from user
+    </select>
+
+    <!--多条件查询(模糊查询)-->
+    <select id="findUserList" parameterType="QueryVo"
+            resultType="User">
+        -- SELECT *FROM USER WHERE
+        -- username LIKE '%${user.username}%'
+        -- AND sex=#{user.sex}
+
+
+        /*where、if标签进行判断*/
+        SELECT *FROM USER
+        <where>
+            <if test="user.username!=null and user.username!=''">
+                AND username LIKE '%${user.username}%
+            </if>
+            <if test="user.sex!=null and user.sex!=''">
+                AND sex=#{user.sex}
+            </if>
+        </where>
+    </select>
+
+    <!--插入数据的练习  开始-->
+    <insert id="insertUser" parameterType="User">
+        INSERT INTO user (username,birthday,sex,address)
+        VALUE (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <!--插入数据 并且返回自增主键-->
+    <insert id="insertUser2" parameterType="User">
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO user (username,birthday,sex,address)
+        VALUE (#{username},#{birthday},#{sex},#{address})
+    </insert>
+    <!--插入数据的练习  结束-->
+
+
+    <!--注意:
+    	#{}和${}
+        #{}表示占位符?，#{}接收简单类型的参数时，里面的名称可以任意
+        ${}表示拼接符，${}接收简单类型的参数时，里面的名称必须是value
+        ${}里面的值会原样输出，不加解析（如果该参数值是字符串，有不会添加引号）
+        ${}存在sql注入的风险，但是有些场景下必须使用，比如排序后面会动态传入排序的列名
+
+    -->
+    <select id="findUserListCount" parameterType="QueryVo" resultType="Integer">
+        SELECT COUNT(*) FROM USER WHERE
+        username LIKE '%${user.username}%'
+        AND sex=#{user.sex}
+    </select>
+
+
+    <!--使用resultMap 的简答实例  开始-->
+    <!--id标签：唯一列映射-->
+    <!--result标签:普通列映射-->
+    <resultMap id="UserRstMap" type="User">
+        <id column="_id" property="id"/>
+        <result column="_username" property="username"/>
+        <result column="_sex" property="sex"/>
+    </resultMap>
+
+    <select id="findUserByIdRstMap" parameterType="Integer"
+            resultMap="UserRstMap">
+        SELECT id _id,username _username,sex _sex from user WHERE id=#{id}
+    </select>
+    <!--使用resultMap 的简答实例  结束-->
+
+
+    <!--分页查询的练习 开始-->
+    <!--<parameterMap id="hashMap" type="HashMap">-->
+    <!--<parameter property="page" />-->
+    <!--<parameter property="pagesize"/>-->
+    <!--</parameterMap>-->
+    <select id="usersPagingQuery" parameterType="HashMap" resultType="Users">
+         SELECT *FROM users LIMIT ${page},${pagesize}
+    </select>
+    <!--分页查询的练习 结束-->
+
+
+    <!--foreach标签的练习-->
+    <select id="findUserListForeach" parameterType="QueryVo" resultType="User">
+        SELECT *FROM user
+        <where>
+            and id in
+            <if test="ids!=null">
+                <foreach collection="ids" item="id"
+                         open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <!--一对一映射练习 开始-->
+    <!--（resultType方式）查询出的列的个数和映射的属性的个数要一致
+     是一种平铺式的映射-->
+    <select id="findOrderAndUser" resultType="OrdersExt">
+      select orders.id,orders.user_id,orders.number,user.username,user.sex
+      FROM orders , user
+      WHERE
+      orders.user_id=user.id
+    </select>
+
+    <!--resultMap方式 它是将关联对象添加到主信息的对象中，具体说是对象嵌套对象的一种映射方式-->
+    <resultMap id="OrderAndUserRsMap" type="OrdersExt">
+        <!--订单信息-->
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="number" property="number"/>
+        <!--用户信息-->
+        <!--association一一关联映射-->
+        <!--property要映射的类中的对象名称-->
+        <association property="user" javaType="User">
+            <id column="username" property="username"/>
+            <result column="sex" property="sex"/>
+        </association>
+    </resultMap>
+    <select id="findOrderAndUser2" resultMap="OrderAndUserRsMap">
+      select orders.id,orders.user_id,orders.number,user.username,user.sex
+      FROM orders , user
+      WHERE
+      orders.user_id=user.id
+    </select>
+    <!--一对一映射练习 结束-->
+
+
+    <!--一对多映射练习 开始-->
+    <resultMap id="OrderAndUserRsMap1" type="OrdersExt" extends="OrderAndUserRsMap">
+        <!--订单明细信息 一对多-->
+        <collection property="detailList" ofType="Orderdetail">
+            <id column="id" property="id"/>
+            <result column="items_id" property="itemsId"/>
+            <result column="items_num" property="itemsNum"/>
+        </collection>
+    </resultMap>
+    <select id="findOrderAndUser3" resultMap="OrderAndUserRsMap1">
+        select orders.id,orders.user_id,orders.number,user.username,user.sex,orderdetail.id,orderdetail.items_id,orderdetail.items_num
+        FROM orders , user ,orderdetail
+        WHERE
+        orders.user_id=user.id
+        AND
+        orderdetail.orders_id=orders.id
+    </select>
+    <!--一对多映射练习 结束-->
+
+    <!--多对多映射练习 开始-->
+    <resultMap id="OrderAndUserRsMap2" type="User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="sex" property="sex"/>
+        <collection property="orders" ofType="Orders">
+            <id column="id" property="id"/>
+            <result column="number" property="number"/>
+            <collection property="orderdetails" ofType="Orderdetail">
+                <id column="id" property="id"/>
+                <result column="items_id" property="itemsId"/>
+                <result column="items_num" property="itemsNum"/>
+                <association property="items" javaType="Items">
+                    <id column="id" property="id"/>
+                    <result column="name" property="name"/>
+                    <result column="price" property="price"/>
+                    <result column="detail" property="detail"/>
+                    <result column="pic" property="pic"/>
+                    <result column="createtime" property="createtime"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="findOrderAndUser4" resultMap="OrderAndUserRsMap2">
+        select
+          orders.id,
+          orders.user_id,
+          orders.number,
+          user.username,
+          user.sex,
+          orderdetail.id,
+          orderdetail.items_id,
+          orderdetail.items_num,
+          items.id,
+          items.name,
+          items.price,
+          items.detail,
+          items.pic,
+          items.createtime
+        FROM orders , user ,orderdetail,items
+        WHERE
+          orders.user_id=user.id
+        AND
+          orderdetail.orders_id=orders.id
+        AND
+          orderdetail.items_id=items.id
+    </select>
+    <!--多对多映射练习 结束-->
+
+</mapper>
