@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.task.AsyncTask;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,20 @@ import java.util.concurrent.Future;
 public class DemoApplicationTests {
 
 
+    private Logger logger = Logger.getLogger(getClass());
+
     @Autowired
     private AsyncTask asynctask;
 
     @Test
     public void contextLoads() {
+
+        logger.info("我是log");
+        logger.debug("我是debug");
+        logger.error("我是error");
     }
 
     /**
-     *
      * 异步任务的基本的测试
      *
      * @throws Exception
@@ -33,7 +39,6 @@ public class DemoApplicationTests {
         Future<String> task1 = asynctask.doTaskOne();
         Future<String> task2 = asynctask.doTaskTwo();
         Future<String> task3 = asynctask.doTaskThree();
-
         while (true) {
             if (task1.isDone() && task2.isDone() && task3.isDone()) {
                 // 三个任务都调用完成，退出循环等待

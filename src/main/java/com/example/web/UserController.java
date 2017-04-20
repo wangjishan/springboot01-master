@@ -142,7 +142,7 @@ public class UserController {
         return userMapper.findUserListForeach(queryVo);
     }
 
-    @ApiOperation(value="获取用户列表", notes="")
+    @ApiOperation(value = "获取用户列表", notes = "")
     @RequestMapping("findOrderAndUser")
     public List<OrdersExt> findOrderAndUser() {
         return userMapper.findOrderAndUser();
@@ -168,5 +168,13 @@ public class UserController {
         return studentProperties;
     }
 
-
+    /**
+     * 测试全局异常的捕捉
+     *
+     * @return
+     */
+    @RequestMapping("/zeroException")
+    public int zeroException() {
+        return 100 / 0;
+    }
 }
