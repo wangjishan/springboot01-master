@@ -2,6 +2,7 @@ package com.example.web;
 
 import com.example.entity.*;
 import com.example.mapper.UserMapper;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,10 @@ import java.util.List;
 
 
 /**
+ * swagger2：
+ * 我们通过@ApiOperation注解来给API增加说明
+ * 通过@ApiImplicitParams、@ApiImplicitParam注解来给参数增加说明
+ * <p>
  * 练习
  * <p>
  * Created by user on 2017/4/17.
@@ -61,7 +66,6 @@ public class UserController {
         return user;
     }
 
-
     @PutMapping("insertUser")
     public void insertUser(
             @RequestParam(value = "username", defaultValue = "") String username,
@@ -74,7 +78,6 @@ public class UserController {
         user.setAddress(address);
         userMapper.insertUser(user);
     }
-
 
     @GetMapping("insertUser2")
     public Integer insertUser2(
@@ -89,13 +92,11 @@ public class UserController {
         return userMapper.insertUser2(user);
     }
 
-
     @RequestMapping("findAll")
     public List<User> findUserById() {
         List<User> userAll = userMapper.findUserAll();
         return userAll;
     }
-
 
     @RequestMapping("findUserList")
     public List<User> findUserList(
@@ -108,7 +109,6 @@ public class UserController {
         user.setSex(sex);
         return userMapper.findUserList(queryVo);
     }
-
 
     @RequestMapping("findUserListCount")
     public Integer findUserListCount(@RequestParam(value = "username", defaultValue = "", required = true) String username
@@ -131,7 +131,6 @@ public class UserController {
         return userMapper.usersPagingQuery(map);
     }
 
-
     @RequestMapping("findUserListForeach")
     public List<User> findUserListForeach() {
         QueryVo queryVo = new QueryVo();
@@ -143,12 +142,11 @@ public class UserController {
         return userMapper.findUserListForeach(queryVo);
     }
 
-
+    @ApiOperation(value="获取用户列表", notes="")
     @RequestMapping("findOrderAndUser")
     public List<OrdersExt> findOrderAndUser() {
         return userMapper.findOrderAndUser();
     }
-
 
     @RequestMapping("findOrderAndUser2")
     public List<OrdersExt> findOrderAndUser2() {
@@ -160,12 +158,10 @@ public class UserController {
         return userMapper.findOrderAndUser3();
     }
 
-
     @RequestMapping("findOrderAndUser4")
     public List<OrdersExt> findOrderAndUser4() {
         return userMapper.findOrderAndUser4();
     }
-
 
     @RequestMapping("getStudentProperties")
     public StudentProperties getStudentProperties() {
