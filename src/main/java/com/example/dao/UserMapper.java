@@ -1,9 +1,9 @@
-package com.example.mapper;
+package com.example.dao;
 
-import com.example.entity.OrdersExt;
-import com.example.entity.QueryVo;
-import com.example.entity.User;
-import com.example.entity.Users;
+import com.example.model.OrdersExt;
+import com.example.model.QueryVo;
+import com.example.model.User;
+import com.example.model.Users;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

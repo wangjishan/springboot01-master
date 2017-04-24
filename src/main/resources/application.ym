@@ -6,7 +6,7 @@ server:
 
 #mybatis的相关配置
 mybatis:
-  type-aliases-package: com.example.entity
+  type-aliases-package: com.example.model
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
 
@@ -20,6 +20,9 @@ spring:
      password: root
 
 
+
+
+
 #   test:
 #     driverClassName: com.mysql.jdbc.Driver
 #     url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8
@@ -27,8 +30,8 @@ spring:
 #     password: root
 
 #自定义的属性
-student:
-  name: 老王
-  age: 18
+         student:
+           name: 老王
+           age: 18
 
 

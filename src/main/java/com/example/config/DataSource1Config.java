@@ -23,7 +23,7 @@
 //
 //
 //@Configuration
-//@MapperScan(basePackages = "com.neo.mapper.test1", sqlSessionTemplateRef = "test1SqlSessionTemplate")
+//@MapperScan(basePackages = "com.neo.dao.test1", sqlSessionTemplateRef = "test1SqlSessionTemplate")
 //public class DataSource1Config {
 //
 //    @Bean(name = "test1DataSource")
@@ -41,7 +41,7 @@
 //        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
 //        bean.setDataSource(dataSource);
 //        bean.setMapperLocations(new PathMatchingResourcePatternResolver()
-//                .getResources("classpath:mybatis/mapper/test1/*.xml"));
+//                .getResources("classpath:mybatis/dao/test1/*.xml"));
 //        return bean.getObject();
 //    }
 //

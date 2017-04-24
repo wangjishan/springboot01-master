@@ -1,7 +1,8 @@
 package com.example.web;
 
-import com.example.entity.*;
-import com.example.mapper.UserMapper;
+import com.example.model.*;
+import com.example.dao.UserMapper;
+import com.example.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,8 @@ public class UserController {
     @Autowired
     private StudentProperties studentProperties;
 
+    @Autowired
+    private UserService userService;
 
     /**
      * 这是第一种接口的传参的形式
@@ -160,7 +163,7 @@ public class UserController {
 
     @RequestMapping("findOrderAndUser4")
     public List<OrdersExt> findOrderAndUser4() {
-        return userMapper.findOrderAndUser4();
+        return userService.findOrderAndUser4();
     }
 
     @RequestMapping("getStudentProperties")

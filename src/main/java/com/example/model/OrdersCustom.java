@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.model;
 
 /**
  * 订单自定义po，包括订单信息、用户信息

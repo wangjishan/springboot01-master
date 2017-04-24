@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.model;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * 自定义属性的练习
  * <p>
+ * 也可以指定单独的配置文件 如：value = "classpath:config/wisely.properties"
  * Created by user on 2017/4/19.
  */
 
